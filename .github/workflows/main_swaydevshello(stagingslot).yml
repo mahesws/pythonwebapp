@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'swaydevshello'
           slot-name: 'stagingslot'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7B57368891D74D8FA321093A5BE5C903 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7acf3d660e9a4eab85ba98463d240d40 }}
