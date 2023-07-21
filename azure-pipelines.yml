@@ -8,7 +8,7 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureServiceConnectionId: '7acf3d66-0e9a-4eab-85ba-98463d240d40'
+  azureServiceConnectionId: 'github.com_mahesws'
   
   # Web app name
   webAppName: 'pythonwebappmahes'
