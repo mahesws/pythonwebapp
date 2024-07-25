@@ -1,0 +1,32 @@
+import requests
+import json
+from datetime import datetime, timedelta
+
+# Puppet master and API token
+puppet_master = '<puppet_master>'
+api_token = '<YOUR_API_TOKEN>'
+
+# Calculate the time 24 hours ago in ISO 8601 format
+since_time = (datetime.utcnow() - timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+# API endpoint
+url = f"https://{puppet_master}:8143/orchestrator/v1/jobs?since={since_time}"
+
+# Headers for the request
+headers = {
+    'X-Authentication': api_token,
+    'Content-Type': 'application/json'
+}
+
+# Make the API request
+response = requests.get(url, headers=headers, verify=False)
+
+# Check if the request was successful
+if response.status_code == 200:
+    jobs = response.json()
+    # Process the jobs to extract task logs
+    for job in jobs.get('items', []):
+        print(f"Job ID: {job['job_id']}, Task: {job['task']}, Status: {job['status']}")
+        # Add more detailed log extraction if needed
+else:
+    print(f"Failed to fetch jobs: {response.status_code} - {response.text}")
