@@ -1,0 +1,48 @@
+import requests
+from datetime import datetime, timedelta
+
+# Define Puppet master and API token
+puppet_master = 'your_puppet_master'
+api_token = 'your_api_token'
+
+# Calculate the time 24 hours ago in ISO 8601 format
+since_time = (datetime.utcnow() - timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+# Construct the URL
+url = f"https://{puppet_master}:8143/orchestrator/v1/jobs"
+
+# Set the headers for the request
+headers = {
+    'X-Authentication': api_token,
+    'Content-Type': 'application/json'
+}
+
+# Make the API request
+response = requests.get(url, headers=headers, verify=False)
+
+# Check if the request was successful
+if response.status_code == 200:
+    jobs = response.json()
+    # Debug: Print the entire JSON response to understand its structure
+    print("Response JSON:", jobs)
+    
+    # Filter jobs by the timestamp
+    filtered_jobs = [
+        job for job in jobs.get('items', [])
+        if datetime.strptime(job['timestamp'], '%Y-%m-%dT%H:%M:%SZ') > datetime.strptime(since_time, '%Y-%m-%dT%H:%M:%SZ')
+    ]
+    
+    # Process the filtered jobs
+    for job in filtered_jobs:
+        # Debug: Print each job to understand its structure
+        print("Job:", job)
+        
+        # Adjust keys according to the actual structure
+        job_id = job.get('job_id', 'N/A')
+        task = job.get('task', 'N/A')
+        status = job.get('status', 'N/A')
+        timestamp = job.get('timestamp', 'N/A')
+        
+        print(f"Job ID: {job_id}, Task: {task}, Status: {status}, Timestamp: {timestamp}")
+else:
+    print(f"Failed to fetch jobs: {response.status_code} - {response.text}")
